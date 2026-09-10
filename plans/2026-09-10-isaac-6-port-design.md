@@ -24,7 +24,7 @@ Date: 2026-09-10. Status: approved in chat (direction: 6.0.x on PhysX, not Newto
 | Isaac Sim | `isaacsim[all,extscache]==6.0.1.0` from pypi.nvidia.com |
 | Physics | PhysX (default). Newton not used. |
 | Renderer | RTX Real-Time 2.0 (6.0 default). Accept the look change; validate vs real frames. |
-| cuRobo | NVlabs/curobo main, built from source with an nvcc ≥ 12.8 (sm_120) |
+| cuRobo | NVlabs/curobo tag `v0.7.8` (main is the v2 API; GenManip uses v1 `curobo.wrap`/`curobo.types`), built with nvcc 12.8 via user-space micromamba (sm_120) |
 | mplib | keep pinned; guard the import so a missing wheel does not break curobo runs |
 
 ## Rename map (Isaac Sim 4.5 extension split, still valid in 6.0)
