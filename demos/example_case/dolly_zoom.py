@@ -21,7 +21,7 @@ from genmanip.utils.usd_utils.camera_utils import get_src
 from genmanip.utils.standalone.file_utils import load_default_config
 from genmanip.utils.standalone.utils import setup_logger
 from genmanip.utils.loader.robot import relate_franka_from_data
-from omni.isaac.core import World  # type: ignore
+from isaacsim.core.api import World  # type: ignore
 from genmanip.utils.standalone.file_utils import load_yaml
 from genmanip.utils.pointcloud.pointcloud import objectList2meshList
 from genmanip.utils.usd_utils import set_colliders

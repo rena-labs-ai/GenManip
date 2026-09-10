@@ -7,7 +7,7 @@ from pathlib import Path
 from pxr import Sdf, Gf, Usd, UsdGeom, UsdUI  # type: ignore
 from typing import List
 import os
-from omni.isaac.core.prims import XFormPrim  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
 import omni.usd  # type: ignore
 import numpy as np
 import open3d as o3d
@@ -607,7 +607,7 @@ def load_world_xform_prim(scene_path, scene_prim_path="/World"):
 
 
 def export_usds_from_scene(scene_path: str, output_path: str):
-    from omni.isaac.core import World  # type: ignore
+    from isaacsim.core.api import World  # type: ignore
 
     scene_xform, uuid = load_world_xform_prim(scene_path)
     world = World()

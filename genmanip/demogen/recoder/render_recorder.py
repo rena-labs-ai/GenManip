@@ -22,7 +22,7 @@ import lmdb
 import numpy as np
 import roboticstoolbox as rtb
 
-from omni.isaac.sensor import Camera  # type: ignore
+from isaacsim.sensors.camera import Camera  # type: ignore
 
 from genmanip.core.robot.base import BaseEmbodiment
 from genmanip.utils.usd_utils import (

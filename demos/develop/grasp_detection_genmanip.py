@@ -23,8 +23,8 @@ from isaacsim import SimulationApp  # type: ignore
 
 simulation_app = SimulationApp({"headless": True})  # False
 
-from omni.isaac.core import World  # type: ignore
-from omni.isaac.core.utils.prims import delete_prim  # type: ignore
+from isaacsim.core.api import World  # type: ignore
+from isaacsim.core.utils.prims import delete_prim  # type: ignore
 
 from genmanip.core.robot.utils import RobotFactory
 from genmanip.demogen.random_place.random_place import (

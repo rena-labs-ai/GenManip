@@ -15,10 +15,10 @@ from pydantic import Field, BaseModel
 import torch
 from tqdm import tqdm
 
-from omni.isaac.core.objects import VisualCuboid  # type: ignore
-from omni.isaac.core.prims import XFormPrim  # type: ignore
-from omni.isaac.core.utils.prims import get_prim_at_path  # type: ignore
-from omni.isaac.core.utils.types import JointsState  # type: ignore
+from isaacsim.core.api.objects import VisualCuboid  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path  # type: ignore
+from isaacsim.core.utils.types import JointsState  # type: ignore
 
 from genmanip.core.robot.base import BaseEmbodiment
 from genmanip.core.robot.dualarm_manip import DualArmEmbodiment

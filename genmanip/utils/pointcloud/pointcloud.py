@@ -15,8 +15,8 @@ import numpy as np
 import open3d as o3d
 from tqdm import tqdm
 
-from omni.isaac.core.prims import XFormPrim  # type: ignore
-from omni.isaac.core.utils.prims import get_prim_at_path, get_prim_parent, get_prim_path  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path, get_prim_parent, get_prim_path  # type: ignore
 
 from genmanip.utils.pointcloud.transform import (
     forward_transform_mesh,

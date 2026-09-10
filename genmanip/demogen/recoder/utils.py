@@ -13,7 +13,7 @@ from typing import Any
 import lmdb
 import numpy as np
 
-from omni.isaac.core.prims import XFormPrim  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
 
 from genmanip.core.scene.scene_config import SceneConfig
 

@@ -23,7 +23,7 @@ config = load_yaml(args.config)
 
 simulation_app = SimulationApp({"headless": not args.local})
 
-from omni.isaac.core.utils.prims import delete_prim, get_prim_at_path  # type: ignore
+from isaacsim.core.utils.prims import delete_prim, get_prim_at_path  # type: ignore
 from genmanip.utils.standalone.file_utils import load_default_config
 from genmanip.utils.standalone.utils import setup_logger
 from genmanip.core.scene.scene_config import SceneConfig

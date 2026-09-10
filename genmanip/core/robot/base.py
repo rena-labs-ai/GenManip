@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 from scipy.spatial.transform import Rotation as R
 from typing import List
 
-from omni.isaac.core.robots.robot import Robot  # type: ignore
+from isaacsim.core.api.robots.robot import Robot  # type: ignore
 
 from genmanip.core.scene.scene_config import RobotConfig
 from genmanip.core.robot.utils import RobotFactory

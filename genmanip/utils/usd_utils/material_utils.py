@@ -7,8 +7,8 @@ Licensed under the MIT License.
 
 import random
 
-from omni.isaac.core.utils.prims import get_prim_at_path  # type: ignore
-from omni.isaac.core.materials.omni_pbr import OmniPBR  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path  # type: ignore
+from isaacsim.core.api.materials.omni_pbr import OmniPBR  # type: ignore
 import omni.usd  # type: ignore
 from pxr import Sdf, UsdShade, Gf  # type: ignore
 

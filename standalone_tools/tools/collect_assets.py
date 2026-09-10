@@ -11,7 +11,7 @@ import asyncio
 from isaacsim import SimulationApp  # type: ignore[import-untyped]
 
 kit = SimulationApp({"headless": True})
-from omni.isaac.core.utils.extensions import enable_extension  # type: ignore
+from isaacsim.core.utils.extensions import enable_extension  # type: ignore
 
 enable_extension("omni.kit.usd.collect")
 

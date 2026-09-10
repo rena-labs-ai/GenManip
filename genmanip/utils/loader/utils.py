@@ -11,8 +11,8 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from omni.isaac.core.prims import XFormPrim  # type: ignore
-from omni.isaac.core.articulations import Articulation  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
+from isaacsim.core.prims import SingleArticulation as Articulation  # type: ignore
 from genmanip.utils.pointcloud.pointcloud import (
     get_current_meshList,
     get_mesh_info_by_load,

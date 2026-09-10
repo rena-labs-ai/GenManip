@@ -11,9 +11,9 @@ import numpy as np
 import open3d as o3d
 
 import omni.usd  # type: ignore
-from omni.isaac.core.prims import XFormPrim, RigidPrim  # type: ignore
-from omni.isaac.core.utils.prims import get_prim_at_path  # type: ignore
-from omni.isaac.core.utils.stage import add_reference_to_stage  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim, SingleRigidPrim as RigidPrim  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path  # type: ignore
+from isaacsim.core.utils.stage import add_reference_to_stage  # type: ignore
 from pxr import Usd, UsdPhysics, UsdGeom, Gf  # type: ignore
 
 from .collision_utils import set_colliders

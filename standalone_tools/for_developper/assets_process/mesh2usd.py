@@ -61,7 +61,7 @@ def asset_convert(args):
 if __name__ == "__main__":
     kit = SimulationApp()
     import omni
-    from omni.isaac.core.utils.extensions import enable_extension  # type: ignore
+    from isaacsim.core.utils.extensions import enable_extension  # type: ignore
 
     enable_extension("omni.kit.asset_converter")
     parser = argparse.ArgumentParser("Convert GLB assets to USD")

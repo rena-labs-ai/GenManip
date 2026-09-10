@@ -8,8 +8,8 @@ Licensed under the MIT License.
 import os
 from typing import List
 
-from omni.isaac.core.robots.robot import Robot  # type: ignore
-from omni.isaac.core.utils.prims import create_prim, get_prim_at_path  # type: ignore
+from isaacsim.core.api.robots.robot import Robot  # type: ignore
+from isaacsim.core.utils.prims import create_prim, get_prim_at_path  # type: ignore
 
 from genmanip.core.robot.base import ManipRobotConfig
 from genmanip.core.robot.singlearm_manip import SingleArmEmbodiment

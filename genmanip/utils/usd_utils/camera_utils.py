@@ -10,8 +10,8 @@ import math
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
-from omni.isaac.core.prims import XFormPrim  # type: ignore
-from omni.isaac.sensor import Camera  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
+from isaacsim.sensors.camera import Camera  # type: ignore
 
 from genmanip.utils.standalone.pc_utils import get_world_corners_from_bbox3d
 from genmanip.utils.standalone.transform_utils import pose_to_transform

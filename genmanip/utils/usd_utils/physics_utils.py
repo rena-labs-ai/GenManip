@@ -5,8 +5,8 @@ All rights reserved.
 Licensed under the MIT License.
 """
 
-from omni.isaac.core.prims import GeometryPrim  # type: ignore
-from omni.isaac.core.materials import PhysicsMaterial  # type: ignore
+from isaacsim.core.prims import SingleGeometryPrim as GeometryPrim  # type: ignore
+from isaacsim.core.api.materials import PhysicsMaterial  # type: ignore
 import omni.usd  # type: ignore
 from pxr import UsdPhysics, PhysxSchema  # type: ignore
 

@@ -5,7 +5,7 @@ All rights reserved.
 Licensed under the MIT License.
 """
 
-from omni.isaac.core.utils.prims import get_prim_at_path  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path  # type: ignore
 from pxr import UsdLux  # type: ignore
 
 

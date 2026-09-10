@@ -8,8 +8,8 @@ Licensed under the MIT License.
 import os
 from typing import List
 
-from omni.isaac.core.robots.robot import Robot  # type: ignore
-from omni.isaac.franka import Franka  # type: ignore
+from isaacsim.core.api.robots.robot import Robot  # type: ignore
+from isaacsim.robot.manipulators.examples.franka import Franka  # type: ignore
 
 from genmanip.core.robot.base import ManipRobotConfig
 from genmanip.core.robot.singlearm_manip import SingleArmEmbodiment

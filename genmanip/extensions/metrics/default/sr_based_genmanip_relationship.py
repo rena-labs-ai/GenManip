@@ -16,7 +16,7 @@ from shapely.geometry import Point
 from shapely.vectorized import contains
 from sklearn.neighbors import NearestNeighbors
 
-from omni.isaac.core.articulations import Articulation  # type: ignore
+from isaacsim.core.prims import SingleArticulation as Articulation  # type: ignore
 
 from genmanip.core.metrics.base import BaseMetric
 from genmanip.core.metrics.utils import MetricFactory

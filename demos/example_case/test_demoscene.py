@@ -20,7 +20,7 @@ from genmanip.utils.standalone.utils import setup_logger
 
 simulation_app = SimulationApp({"headless": True})
 
-from omni.isaac.core import World  # type: ignore
+from isaacsim.core.api import World  # type: ignore
 
 from genmanip.utils.loader.scene import (
     create_camera_list,

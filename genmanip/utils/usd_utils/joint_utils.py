@@ -5,9 +5,9 @@ All rights reserved.
 Licensed under the MIT License.
 """
 
-from omni.isaac.core.prims import XFormPrim  # type: ignore
-from omni.isaac.core.robots.robot import Robot  # type: ignore
-from omni.isaac.core.utils.prims import get_prim_at_path  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
+from isaacsim.core.api.robots.robot import Robot  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path  # type: ignore
 import omni.usd  # type: ignore
 from pxr import PhysxSchema, Usd, UsdPhysics  # type: ignore
 

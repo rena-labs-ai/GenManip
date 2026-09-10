@@ -17,13 +17,13 @@ from tqdm import tqdm
 
 import omni.replicator.core as rep  # type: ignore
 import omni.usd  # type: ignore
-from omni.isaac.core import World  # type: ignore
-from omni.isaac.core.articulations import Articulation  # type: ignore
-from omni.isaac.core.materials.omni_pbr import OmniPBR  # type: ignore
-from omni.isaac.core.prims import XFormPrim  # type: ignore
-from omni.isaac.core.robots.robot import Robot  # type: ignore
-from omni.isaac.core.utils.prims import delete_prim, is_prim_path_valid  # type: ignore
-from omni.isaac.sensor import Camera  # type: ignore
+from isaacsim.core.api import World  # type: ignore
+from isaacsim.core.prims import SingleArticulation as Articulation  # type: ignore
+from isaacsim.core.api.materials.omni_pbr import OmniPBR  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
+from isaacsim.core.api.robots.robot import Robot  # type: ignore
+from isaacsim.core.utils.prims import delete_prim, is_prim_path_valid  # type: ignore
+from isaacsim.sensors.camera import Camera  # type: ignore
 
 from pxr import UsdGeom, Usd  # type: ignore
 

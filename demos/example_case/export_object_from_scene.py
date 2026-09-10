@@ -15,8 +15,8 @@ simulation_app = SimulationApp({"headless": True})
 from genmanip.utils.loader.scene import load_world_xform_prim
 from genmanip.utils.usd_utils.export_utils import export
 
-from omni.isaac.core.prims import XFormPrim  # type: ignore
-from omni.isaac.core.utils.prims import get_prim_at_path  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path  # type: ignore
 
 usd_path_list = [
     os.path.join("/home/gaoning/grasp_vla_assets/GenManip", usd_path)

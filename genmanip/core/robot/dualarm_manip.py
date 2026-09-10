@@ -12,7 +12,7 @@ from pydantic import Field
 from scipy.spatial.transform import Rotation as R
 
 from curobo.types.state import JointState
-from omni.isaac.core.prims import XFormPrim  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
 
 from genmanip.core.robot.base import BaseEmbodiment, ManipRobotConfig
 from genmanip.core.robot.utils import RobotFactory

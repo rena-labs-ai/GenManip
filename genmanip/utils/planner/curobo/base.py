@@ -23,8 +23,8 @@ from curobo.wrap.reacher.motion_gen import (
 import numpy as np
 import torch
 
-from omni.isaac.core.utils.types import JointsState as SimJointState  # type: ignore
-from omni.isaac.core.utils.stage import get_current_stage  # type: ignore
+from isaacsim.core.utils.types import JointsState as SimJointState  # type: ignore
+from isaacsim.core.utils.stage import get_current_stage  # type: ignore
 
 
 class CuroboPlanner:

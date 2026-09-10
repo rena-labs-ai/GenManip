@@ -22,9 +22,9 @@ from scipy.spatial.transform import Rotation as R
 from shapely.geometry import Polygon, Point
 from shapely.geometry.base import BaseGeometry
 
-from omni.isaac.core.prims import XFormPrim  # type: ignore
-from omni.isaac.core.articulations import Articulation  # type: ignore
-from omni.isaac.core import World  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
+from isaacsim.core.prims import SingleArticulation as Articulation  # type: ignore
+from isaacsim.core.api import World  # type: ignore
 
 from genmanip.core.scene.scene_config import LayoutConfig, SceneConfig
 from genmanip.demogen.random_place.scene_graph_placement import process_scene_graph

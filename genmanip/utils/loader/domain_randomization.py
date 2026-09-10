@@ -16,10 +16,10 @@ import numpy as np
 import random
 from scipy.spatial.transform import Rotation as R
 
-from omni.isaac.core.prims import XFormPrim  # type: ignore
-from omni.isaac.core.robots.robot import Robot  # type: ignore
-from omni.isaac.core.utils.prims import get_prim_at_path, delete_prim  # type: ignore
-from omni.isaac.sensor import Camera  # type: ignore
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
+from isaacsim.core.api.robots.robot import Robot  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path, delete_prim  # type: ignore
+from isaacsim.sensors.camera import Camera  # type: ignore
 from pxr import Usd  # type: ignore
 
 from genmanip.core.scene.scene_config import LayoutConfig, ObjectConfig, SceneConfig

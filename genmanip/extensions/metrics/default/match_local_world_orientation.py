@@ -3,7 +3,7 @@ from typing import List, Literal, Tuple, Any
 from pydantic import BaseModel, Field, field_validator
 
 from pxr import Usd, UsdGeom, Gf
-from omni.isaac.core.utils.stage import get_current_stage
+from isaacsim.core.utils.stage import get_current_stage
 
 from genmanip.core.metrics.base import BaseMetric
 from genmanip.core.metrics.utils import MetricFactory

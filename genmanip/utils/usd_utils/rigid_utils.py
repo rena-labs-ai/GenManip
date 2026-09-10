@@ -5,7 +5,7 @@ All rights reserved.
 Licensed under the MIT License.
 """
 
-from omni.isaac.core.utils.prims import get_prim_at_path  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path  # type: ignore
 from pxr import PhysxSchema, UsdPhysics, Usd  # type: ignore
 
 from .collision_utils import set_contact_offset_recursively, set_rest_offset_recursively

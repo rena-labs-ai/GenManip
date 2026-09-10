@@ -12,7 +12,7 @@ from tqdm import tqdm
 import traceback
 import uuid
 
-from omni.isaac.core.prims import XFormPrim  # type: ignore[import-untyped]
+from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore[import-untyped]
 
 from genmanip.core.scene.scene import Scene
 from genmanip.demogen.recoder.render_recorder import RenderRecorder

@@ -17,7 +17,7 @@ from scipy.spatial.transform import Rotation as R
 from urllib3.exceptions import InsecureRequestWarning
 from urllib3.util.ssl_ import create_urllib3_context
 
-from omni.isaac.sensor import Camera  # type: ignore
+from isaacsim.sensors.camera import Camera  # type: ignore
 
 from genmanip.utils.usd_utils.camera_utils import get_src, get_intrinsic_matrix
 

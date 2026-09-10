@@ -5,8 +5,8 @@ All rights reserved.
 Licensed under the MIT License.
 """
 
-from omni.isaac.core.utils.prims import get_prim_at_path  # type: ignore
-from omni.isaac.core.utils.semantics import add_update_semantics  # type: ignore
+from isaacsim.core.utils.prims import get_prim_at_path  # type: ignore
+from isaacsim.core.utils.semantics import add_update_semantics  # type: ignore
 
 
 def set_semantic_label(prim_path: str, label: str) -> None:
