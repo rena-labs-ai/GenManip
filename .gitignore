@@ -7,4 +7,4 @@ logs/
 *.egg-info/
 AGENTS.md
 CLAUDE.md
-client_results/*
+client_results/*.venv/
