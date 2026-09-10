@@ -9,6 +9,9 @@ import os
 from typing import List
 
 from isaacsim.core.api.robots.robot import Robot  # type: ignore
+from isaacsim.core.utils.extensions import enable_extension  # type: ignore
+
+enable_extension("isaacsim.robot.manipulators.examples")
 from isaacsim.robot.manipulators.examples.franka import Franka  # type: ignore
 
 from genmanip.core.robot.base import ManipRobotConfig

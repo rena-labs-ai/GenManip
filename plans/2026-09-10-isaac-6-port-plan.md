@@ -48,17 +48,17 @@
 **Interfaces:**
 - Produces: `.venv/bin/python` with `isaacsim` 6.0.1, `torch` 2.11+cu128, GenManip `requirements.txt` (minus anything with no py3.12 wheel, reported).
 
-- [ ] **Step 1:** `uv venv --python 3.12 .venv`
-- [ ] **Step 2:** `uv pip install --python .venv/bin/python torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128`
-- [ ] **Step 3:** `uv pip install --python .venv/bin/python "isaacsim[all,extscache]==6.0.1.0" --extra-index-url https://pypi.nvidia.com` (10+ GB, run in background, poll).
-- [ ] **Step 4:** `uv pip install --python .venv/bin/python -r requirements.txt`; if `mplib`/`roboticstoolbox-python`/`open3d`/`python-fcl` lack py3.12 wheels, record which and continue.
-- [ ] **Step 5 (check):**
+- [x] **Step 1:** `uv venv --python 3.12 .venv`
+- [x] **Step 2:** `uv pip install --python .venv/bin/python torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128`
+- [x] **Step 3:** `uv pip install --python .venv/bin/python "isaacsim[all,extscache]==6.0.1.0" --extra-index-url https://pypi.nvidia.com --index-strategy unsafe-best-match --prerelease=allow` (10+ GB, run in background, poll). The two extra flags are required; without them resolution fails on `mujoco-usd-converter` / `tinyobjloader`.
+- [x] **Step 4:** `grep -v '^mplib' requirements.txt | uv pip install --python .venv/bin/python -r /dev/stdin`. mplib skipped (numpy downgrade to 1.26 breaks Isaac Sim; rejected at runtime anyway). Everything else installed.
+- [x] **Step 5 (check):**
   ```bash
   OMNI_KIT_ACCEPT_EULA=YES .venv/bin/python -c "from isaacsim import SimulationApp; a=SimulationApp({'headless':True}); import omni.usd; print('OK', omni.usd.get_context().get_stage()); a.close()"
   .venv/bin/python -c "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.get_device_capability())"
   ```
   Expected: `OK Usd.Stage…` and `2.11.0+cu128 True (12, 0)`.
-- [ ] **Step 6:** Write `scripts/install_isaac6.sh` containing exactly the commands that worked (steps 1–4 + `export OMNI_KIT_ACCEPT_EULA=YES`), then commit: `git add scripts/install_isaac6.sh && git commit -m "port: Isaac Sim 6.0.1 install script (py3.12, torch cu128)"`.
+- [x] **Step 6:** Write `scripts/install_isaac6.sh` containing exactly the commands that worked (steps 1–4 + `export OMNI_KIT_ACCEPT_EULA=YES`), then commit: `git add scripts/install_isaac6.sh && git commit -m "port: Isaac Sim 6.0.1 install script (py3.12, torch cu128)"`.
 
 ---
 
@@ -72,10 +72,10 @@
 - Consumes: Task 1 venv.
 - Produces: `from curobo.wrap.reacher.motion_gen import MotionGen` importable; kernels run on the GPU.
 
-- [ ] **Step 1:** `mkdir -p saved/envs && git clone https://github.com/NVlabs/curobo.git saved/envs/curobo`
-- [ ] **Step 2:** Get an sm_120-capable nvcc without sudo: `uv pip install --python .venv/bin/python "nvidia-cuda-nvcc-cu12==12.8.*" "nvidia-cuda-runtime-cu12==12.8.*" "nvidia-cuda-cccl-cu12==12.8.*"` then `export CUDA_HOME=$PWD/.venv/lib/python3.12/site-packages/nvidia/cuda_nvcc` and `export PATH=$CUDA_HOME/bin:$PATH`. Check `nvcc --version` prints 12.8.x. If the wheel layout lacks headers `cuda_runtime.h`, symlink `nvidia/cuda_runtime/include/*` into `$CUDA_HOME/include`.
-- [ ] **Step 3:** `export TORCH_CUDA_ARCH_LIST="12.0"; uv pip install --python .venv/bin/python -e saved/envs/curobo --no-build-isolation` (build takes 5–15 min).
-- [ ] **Step 4 (check):**
+- [x] **Step 1:** `mkdir -p saved/envs && git clone --depth 1 --branch v0.7.8 https://github.com/NVlabs/curobo.git saved/envs/curobo` (cuRobo `main` is v2 with a new API; GenManip imports the v1 `curobo.wrap`/`curobo.types` modules, so pin `v0.7.8`).
+- [x] **Step 2:** Get an sm_120-capable nvcc without sudo. The pip wheels `nvidia-cuda-nvcc-cu12` (PyPI and pypi.nvidia.com) ship only `ptxas`/nvvm, no `nvcc` binary, so use conda packages via user-space micromamba instead: `micromamba create -p .venv/cuda-12.8 -c nvidia -c conda-forge --override-channels cuda-nvcc-impl=12.8 cuda-cudart-dev=12.8 cuda-cccl=12.8`, then symlink `include -> targets/x86_64-linux/include` and `lib64 -> lib` (see `scripts/install_isaac6.sh`). Original pip idea, kept for reference: `uv pip install --python .venv/bin/python "nvidia-cuda-nvcc-cu12==12.8.*" "nvidia-cuda-runtime-cu12==12.8.*" "nvidia-cuda-cccl-cu12==12.8.*"` then `export CUDA_HOME=$PWD/.venv/lib/python3.12/site-packages/nvidia/cuda_nvcc` and `export PATH=$CUDA_HOME/bin:$PATH`. Check `nvcc --version` prints 12.8.x. If the wheel layout lacks headers `cuda_runtime.h`, symlink `nvidia/cuda_runtime/include/*` into `$CUDA_HOME/include`.
+- [x] **Step 3:** `export CUDA_HOME=$PWD/.venv/cuda-12.8 PATH=$CUDA_HOME/bin:$PATH TORCH_CUDA_ARCH_LIST="12.0" MAX_JOBS=8; uv pip install --python .venv/bin/python -e saved/envs/curobo --no-build-isolation` (build takes 5–15 min).
+- [x] **Step 4 (check):**
   ```bash
   .venv/bin/python -c "
   from curobo.types.base import TensorDeviceType
@@ -88,7 +88,7 @@
   q=ik.sample_configs(1); kin=ik.fk(q); r=ik.solve_batch(Pose(kin.ee_position,kin.ee_quaternion)); print('IK success', bool(r.success.all()))"
   ```
   Expected: `IK success True` with no `no kernel image` error.
-- [ ] **Step 5:** Append the working commands to `scripts/install_isaac6.sh`; commit `git commit -am "port: build cuRobo for sm_120 with pip nvcc 12.8"`.
+- [x] **Step 5:** Append the working commands to `scripts/install_isaac6.sh`; commit `git commit -am "port: build cuRobo for sm_120 with pip nvcc 12.8"`.
 - Fallback if pip nvcc cannot build: report to the user that a system CUDA 12.8 toolkit (runfile, toolkit only, sudo) is required; do not attempt sudo.
 
 ---
@@ -118,7 +118,7 @@
     -e 's/from omni\.isaac\.franka import Franka/from isaacsim.robot.manipulators.examples.franka import Franka/'
   ```
 - [ ] **Step 2 (check):** `grep -rn "omni\.isaac" --include=*.py . | grep -v "^\s*#"`; Expected: empty. Then `.venv/bin/python -m compileall -q genmanip standalone_tools demos demogen.py render.py`; Expected: no output.
-- [ ] **Step 3:** Also guard the mplib import if Task 1 reported no py3.12 wheel: in `genmanip/core/robot/base.py`, `genmanip/utils/loader/scene.py`, `genmanip/utils/loader/domain_randomization.py` wrap the `mplib` imports in `try/except ImportError: MplibPlanner = None` (and `Pose = None`). Skip if mplib installed.
+- [x] **Step 3:** Also guard the mplib import if Task 1 reported no py3.12 wheel: in `genmanip/core/robot/base.py`, `genmanip/utils/loader/scene.py`, `genmanip/utils/loader/domain_randomization.py` wrap the `mplib` imports in `try/except ImportError: MplibPlanner = None` (and `Pose = None`). Skip if mplib installed.
 - [ ] **Step 4:** `git add -A genmanip standalone_tools demos && git commit -m "port: rename omni.isaac.* imports to isaacsim.* (Isaac Sim 4.5+ names)"`
 
 ---
@@ -132,7 +132,7 @@
 - Consumes: Task 1 venv, Task 2 cuRobo, Task 3 renames.
 - Produces: a script that imports every `genmanip` module inside a headless `SimulationApp` and fails on the first `ImportError`; a list of deprecation warnings.
 
-- [ ] **Step 1:** Write the script:
+- [x] **Step 1:** Write the script:
   ```python
   import os, sys, pkgutil, importlib, warnings, traceback
   os.environ.setdefault("OMNI_KIT_ACCEPT_EULA", "YES")
@@ -154,9 +154,9 @@
   print("FAILED:", *failed, sep="\n  ")
   sys.exit(1 if failed else 0)
   ```
-- [ ] **Step 2 (check):** `.venv/bin/python standalone_tools/verify/check_imports_isaac6.py`; Expected: `FAILED:` with nothing after it, exit 0. Fix each failure in place (wrong class name, moved module) using `dir()` of the target package; only names, no logic changes.
-- [ ] **Step 3:** Record the deprecation list in `plans/2026-09-10-isaac-6-port-plan.md` under "Deprecations seen" (below).
-- [ ] **Step 4:** `git add standalone_tools/verify/check_imports_isaac6.py genmanip && git commit -m "port: import-walk check for Isaac Sim 6; fix moved names"`
+- [ ] **Step 2 (check):** `.venv/bin/python standalone_tools/verify/check_imports_isaac6.py` (2026-09-10: 99 modules; all non-curobo name-level failures fixed; remaining FAILED = curobo (pending Task 2), roboticstoolbox-python 1.1.1 wheel built against numpy 1.x (`numpy.core.multiarray failed to import`; fix: `uv pip install --python .venv/bin/python --no-binary roboticstoolbox-python --reinstall-package roboticstoolbox-python roboticstoolbox-python`), `gpt_utils` needs `OPENAI_API_KEY`, `io_utils` needs system `libturbojpeg`. With those three stubbed every module imports.); Expected: `FAILED:` with nothing after it, exit 0. Fix each failure in place (wrong class name, moved module) using `dir()` of the target package; only names, no logic changes.
+- [x] **Step 3:** Record the deprecation list in `plans/2026-09-10-isaac-6-port-plan.md` under "Deprecations seen" (below).
+- [x] **Step 4:** `git add standalone_tools/verify/check_imports_isaac6.py genmanip && git commit -m "port: import-walk check for Isaac Sim 6; fix moved names"`
 
 ---
 
@@ -218,7 +218,14 @@ Spawn one `skill-creator:skill-creator` agent per skill after the underlying tas
 
 ## Deprecations seen
 
-(filled by Task 4)
+Import walk 2026-09-10 (Isaac Sim 6.0.1, 99 `genmanip` modules):
+
+- Python `warnings` with "deprecat": none.
+- Kit log: `[Warning] [pxr.Semantics] pxr.Semantics is deprecated - please use Semantics instead` (from Isaac's own `isaacsim.core.utils.semantics`, not our code).
+- `isaacsim.core.utils.semantics.add_update_semantics` is gone; ported `genmanip/utils/usd_utils/semantic_utils.py` to `add_labels(prim, [label], instance_name="class")` (LabelsAPI instance "class").
+- `isaacsim.robot.manipulators.examples` is not auto-enabled; `enable_extension("isaacsim.robot.manipulators.examples")` added before the Franka import in `panda_hand.py` and `planner/mplib/utils.py`.
+- Python 3.12 dataclasses reject `np.ndarray` defaults (`mutable default ... use default_factory`); fixed in `genmanip/utils/pointcloud/utils.py`.
+- `SimulationApp.close()` with `fastShutdown` calls `os._exit()`; print results and pass `exit_code=` to `close()` instead of `sys.exit` after it.
 
 ## Runtime fixes
 

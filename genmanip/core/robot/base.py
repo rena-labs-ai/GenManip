@@ -7,7 +7,10 @@ Licensed under the MIT License.
 
 from abc import abstractmethod
 
-from mplib.planner import Planner as MplibPlanner
+try:
+    from mplib.planner import Planner as MplibPlanner
+except ImportError:
+    MplibPlanner = None
 import numpy as np
 from pydantic import BaseModel, Field
 from scipy.spatial.transform import Rotation as R

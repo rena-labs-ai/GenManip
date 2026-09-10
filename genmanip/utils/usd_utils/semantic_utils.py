@@ -6,12 +6,12 @@ Licensed under the MIT License.
 """
 
 from isaacsim.core.utils.prims import get_prim_at_path  # type: ignore
-from isaacsim.core.utils.semantics import add_update_semantics  # type: ignore
+from isaacsim.core.utils.semantics import add_labels  # type: ignore
 
 
 def set_semantic_label(prim_path: str, label: str) -> None:
     prim = get_prim_at_path(prim_path)
-    add_update_semantics(prim, semantic_label=label, type_label="class")
+    add_labels(prim, [label], instance_name="class")
     # prim = get_prim_at_path(prim_path)
     # if prim.GetTypeName() == "Mesh":
     #     add_update_semantics(prim, semantic_label=label, type_label="class")

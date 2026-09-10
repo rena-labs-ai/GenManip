@@ -10,7 +10,10 @@ import os
 import random
 import re
 from typing import TYPE_CHECKING
-from mplib.planner import Planner as MplibPlanner
+try:
+    from mplib.planner import Planner as MplibPlanner
+except ImportError:
+    MplibPlanner = None
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 from tqdm import tqdm

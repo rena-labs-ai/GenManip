@@ -8,11 +8,18 @@ Licensed under the MIT License.
 import os
 from typing import Sequence
 
-from mplib.planner import Planner
-from mplib.pymp import Pose
+try:
+    from mplib.planner import Planner
+    from mplib.pymp import Pose
+except ImportError:
+    Planner = None
+    Pose = None
 import numpy as np
 
 from isaacsim.core.api.robots.robot import Robot  # type: ignore
+from isaacsim.core.utils.extensions import enable_extension  # type: ignore
+
+enable_extension("isaacsim.robot.manipulators.examples")
 from isaacsim.robot.manipulators.examples.franka import Franka  # type: ignore
 
 

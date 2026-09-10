@@ -11,7 +11,10 @@ import re
 from typing import TYPE_CHECKING
 
 import cv2
-from mplib.pymp import Pose
+try:
+    from mplib.pymp import Pose
+except ImportError:
+    Pose = None
 import numpy as np
 import random
 from scipy.spatial.transform import Rotation as R
