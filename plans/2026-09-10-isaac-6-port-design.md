@@ -53,7 +53,7 @@ surfaces of the deprecated Camera; `set_solver_*_iteration_count` on `SingleArti
 ## Scope
 
 In: environment, cuRobo, import rename, runtime fixes for the stock Franka banana task
-(`configs/tasks/banana_robotiq_example.yml`) through `demogen.py` → `render.py` →
+(`configs/tasks/minimal.yml`, `force_fixed_grasp: true`; the `banana_robotiq_example.yml` variant needs a private AnyGrasp server and is out of scope) through `demogen.py` → `render.py` →
 `check_data_valid.py` → `data_vis.py`, docs, install script, skills capturing the
 repeatable workflows.
 
@@ -62,10 +62,10 @@ Out: Newton, the experimental `isaacsim.core.experimental` API, the Rena robot i
 
 ## Success criteria
 
-1. Headless `demogen.py` on the banana task produces ≥1 episode whose `log.txt` says `success`.
-2. `render.py` on that trajectory writes RGB for every configured camera; `check_data_valid.py --type trajectory` passes; `data_vis.py` writes a viewable mp4 and a sampled frame is not black or washed out.
+1. Headless `demogen.py` on the banana task increments `success` in `<task>/trajectory/log.pkl` and writes ≥1 new episode dir (unique smoke `task_name`, since demogen/render skip existing outputs).
+2. `render.py` on that trajectory writes decodable RGB at the configured resolution for every camera in the camera config; `check_data_valid.py --type trajectory` prints no `Invalid data`; `data_vis.py` writes a viewable mp4 and a sampled frame is not black or washed out.
 3. `grep -r "omni\.isaac" --include=*.py` finds nothing outside comments/docs.
-4. Every `genmanip` module imports inside a `SimulationApp` (walk_packages check).
+4. Every `genmanip` module imports inside a `SimulationApp` (`check_imports_isaac6.py`, glob-based; walk_packages sees nothing because of namespace packages).
 5. A fresh clone + `scripts/install_isaac6.sh` reproduces the environment.
 
 ## Working conventions
