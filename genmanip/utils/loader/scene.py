@@ -13,11 +13,12 @@ from typing import TYPE_CHECKING
 try:
     from mplib.planner import Planner as MplibPlanner
 except ImportError:
-    MplibPlanner = None
+    MplibPlanner = ()  # isinstance(x, ()) is always False
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 from tqdm import tqdm
 
+import carb  # type: ignore
 import omni.replicator.core as rep  # type: ignore
 import omni.usd  # type: ignore
 from isaacsim.core.api import World  # type: ignore
@@ -167,6 +168,11 @@ def create_camera_list(
     only_depth_rep_for_camera: bool = False,
     only_color_rep_for_camera: bool = False,
 ) -> dict[str, Camera]:
+    # Isaac Sim 6: World sets /app/runLoops/main/rateLimitFrequency only when rate
+    # limiting is enabled, but Camera.set_frequency still validates against it.
+    carb.settings.get_settings().set(
+        "/app/runLoops/main/rateLimitFrequency", round(1 / rendering_dt)
+    )
     camera_list = {}
     for key in camera_data:
         rp = rep.create.render_product(

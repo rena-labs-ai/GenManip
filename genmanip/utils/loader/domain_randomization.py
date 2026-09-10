@@ -31,6 +31,7 @@ from genmanip.utils.loader.hardcode_rule import verify_cup_and_plate
 from genmanip.utils.loader.utils import (
     add_object_to_scene_from_preload_list,
     adjust_object_scale_by_thickness,
+    ensure_physics_views,
     get_object_scale,
     remove_object_from_scene_by_preload,
     reset_object_xyz,
@@ -827,6 +828,7 @@ def random_visuals(
 
 
 def reset_scene(scene: "Scene") -> None:
+    ensure_physics_views(scene.world)
     reset_object_xyz(scene.object_list, scene.meta_infos["world_pose_list"])
     reset_articulation_positions(scene)
     for robot, joint_positions, joint_velocities, robot_pose in zip(

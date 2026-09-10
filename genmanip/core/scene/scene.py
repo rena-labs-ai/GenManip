@@ -31,6 +31,7 @@ from genmanip.utils.loader.scene import (
 from genmanip.utils.loader.utils import (
     collect_articulation_list,
     collect_world_pose_list,
+    ensure_physics_views,
     reset_object_xyz,
 )
 from genmanip.utils.pointcloud.pointcloud import objectList2meshList
@@ -375,6 +376,7 @@ class Scene:
         self._preprocess_scene()
 
     def post_initialize(self, skip_warmup: bool = False) -> None:
+        ensure_physics_views(self.world)
         if not skip_warmup:
             self._warmup_world()
         self.collect_meta_infos()

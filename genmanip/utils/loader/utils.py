@@ -13,6 +13,7 @@ import numpy as np
 
 from isaacsim.core.prims import SingleXFormPrim as XFormPrim  # type: ignore
 from isaacsim.core.prims import SingleArticulation as Articulation  # type: ignore
+from isaacsim.core.simulation_manager import SimulationManager  # type: ignore
 from genmanip.utils.pointcloud.pointcloud import (
     get_current_meshList,
     get_mesh_info_by_load,
@@ -24,6 +25,18 @@ from genmanip.core.scene.scene_config import ObjectConfig, SceneConfig
 
 if TYPE_CHECKING:
     from genmanip.core.scene.scene import Scene
+
+
+def ensure_physics_views(world) -> None:
+    # Isaac Sim 6: (de)activating a physics prim invalidates the PhysX tensor
+    # simulation view and every cached prim view; world.initialize_physics() no
+    # longer rebuilds them. world.reset() (stop/play + Scene._finalize) does.
+    # ponytail: also resets registered prims to their default state; callers
+    # re-apply joint positions afterwards.
+    SimulationManager._physics_sim_interface.flush_changes()  # apply pending (de)activations
+    view = SimulationManager.get_physics_sim_view()
+    if view is not None and not view.is_valid:
+        world.reset()
 
 
 def reset_object_xyz(

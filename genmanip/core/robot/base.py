@@ -10,7 +10,7 @@ from abc import abstractmethod
 try:
     from mplib.planner import Planner as MplibPlanner
 except ImportError:
-    MplibPlanner = None
+    MplibPlanner = ()  # isinstance(x, ()) is always False
 import numpy as np
 from pydantic import BaseModel, Field
 from scipy.spatial.transform import Rotation as R

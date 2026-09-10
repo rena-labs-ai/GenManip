@@ -170,12 +170,12 @@
 - Consumes: assets in `saved/assets/` (from `standalone_tools/download_assets.py`).
 - Produces: a trajectory dir under `saved/` whose `log.txt` contains `success`.
 
-- [ ] **Step 1:** Confirm assets: `ls saved/assets/` shows the banana scene and object usds; if not, run `.venv/bin/python standalone_tools/download_assets.py`.
-- [ ] **Step 2:** `cp configs/tasks/banana_robotiq_example.yml saved/configs/banana_smoke.yml && sed -i 's/num_episode: 100/num_episode: 2/' saved/configs/banana_smoke.yml`
-- [ ] **Step 3 (run):** `OMNI_KIT_ACCEPT_EULA=YES timeout 3600 .venv/bin/python demogen.py -cfg saved/configs/banana_smoke.yml 2>&1 | tee saved/demogen_smoke.log`
-- [ ] **Step 4 (check):** `grep -rl success saved/**/log.txt | head`; Expected: ≥1 path. If the run crashes, fix the first traceback with the smallest change (typical: private Camera attrs, `set_solver_*` on `SingleArticulation`, semantics API) and rerun. Log each fix as a bullet under "Runtime fixes" below.
-- [ ] **Step 5:** `.venv/bin/python standalone_tools/verify/check_data_valid.py --data_path <trajectory dir> --type trajectory`; Expected: valid.
-- [ ] **Step 6:** Commit fixes: `git commit -am "port: runtime fixes for demogen on Isaac Sim 6.0"`.
+- [x] **Step 1:** Confirm assets: `ls saved/assets/` shows the banana scene and object usds; if not, run `.venv/bin/python standalone_tools/download_assets.py`. (All three uids are inside `scene_usds/debug_scenes/banana_plate_scenes/base.usd`; `existed_object` type.)
+- [x] **Step 2:** Baseline is `configs/tasks/minimal.yml` (see adversarial review #2): `cp configs/tasks/minimal.yml saved/configs/minimal_smoke.yml`, `num_episode: 2`, both `task_name` → `Smoke_Isaac6_Banana`.
+- [x] **Step 3 (run):** `OMNI_KIT_ACCEPT_EULA=YES timeout 3600 .venv/bin/python demogen.py -cfg saved/configs/minimal_smoke.yml 2>&1 | tee saved/demogen_smoke.log` (writes to `saved/demonstrations/<task_name>/trajectory/`; note demogen exits 0 even after an uncaught traceback).
+- [x] **Step 4 (check):** `saved/demonstrations/Smoke_Isaac6_Banana/trajectory/log.pkl` = `{'success': 2, 'isinstance() arg 2 must be a type...': 19}` (the 19 are from the run before fix #4 below); 2 episode dirs (306 and 307 steps). Fixes logged under "Runtime fixes".
+- [x] **Step 5:** `check_data_valid.py --type trajectory`: 0 "Invalid data" lines.
+- [x] **Step 6:** Committed together with Task 6.
 
 ---
 
@@ -188,10 +188,10 @@
 - Consumes: Task 5 trajectory.
 - Produces: rendered dataset with RGB per camera, an mp4 and a PNG frame under `saved/vis/`.
 
-- [ ] **Step 1 (run):** `OMNI_KIT_ACCEPT_EULA=YES timeout 3600 .venv/bin/python render.py -cfg saved/configs/banana_smoke.yml 2>&1 | tee saved/render_smoke.log`
-- [ ] **Step 2 (check):** `.venv/bin/python standalone_tools/data_vis.py --data_path <episode> --camera_name <first camera in configs/cameras/fixed_camera_robotiq.yml> --output_path saved/vis/banana.mp4`; then extract a frame: `ffmpeg -y -i saved/vis/banana.mp4 -vf "select=eq(n\,30)" -vframes 1 saved/vis/frame30.png` and check mean brightness is in a sane range: `.venv/bin/python -c "import cv2;i=cv2.imread('saved/vis/frame30.png');print(i.shape,i.mean())"`; Expected: shape `(H,W,3)`, mean between 30 and 220. Read the PNG and confirm the robot, table and banana are visible.
-- [ ] **Step 3:** Print the active render mode for the record: inside a `SimulationApp`, `import carb; print(carb.settings.get_settings().get('/rtx/rendermode'))`. Note it in "Runtime fixes".
-- [ ] **Step 4:** Commit fixes: `git commit -am "port: render path on Isaac Sim 6.0 (RTX Real-Time 2.0)"`.
+- [x] **Step 1 (run):** `OMNI_KIT_ACCEPT_EULA=YES timeout 3600 .venv/bin/python render.py -cfg saved/configs/minimal_smoke.yml 2>&1 | tee saved/render_smoke.log` → `saved/demonstrations/Smoke_Isaac6_Banana/render/<episode>/{lmdb,meta_info.pkl,overhead_camera.jpg}`.
+- [x] **Step 2 (check):** Per-camera LMDB decode (`observation/<cam>/color_image/NNNN`, JPEG bytes, **RGB channel order** — consumers must `cvtColor(RGB2BGR)` like `data_vis.py` does). Both episodes: `obs_camera`, `obs_camera_2`, `realsense` = 306/307 frames = trajectory `num_steps`, shape (480,640,3), means 61–194. `camera1` is by design not recorded (popped in `planning_recorder.py:199`; used only for `overhead_camera.jpg`, 480x640, mean 193). `data_vis.py --camera_name obs_camera` → `saved/vis/smoke.mp4` (640x480, 306 frames, 30 fps) → `saved/vis/frame30.png`; middle frames in `saved/vis/{obs_camera,obs_camera_2,realsense}.png`: robot, table, pan and banana visible and lit.
+- [x] **Step 3:** `/rtx/rendermode` = `RealTimePathTracing` (headless `SimulationApp` default in 6.0.1).
+- [x] **Step 4:** Committed with Task 5 as `port: baseline demogen+render on Isaac Sim 6.0 (minimal.yml, fixed grasp)`.
 
 ---
 
@@ -229,7 +229,16 @@ Import walk 2026-09-10 (Isaac Sim 6.0.1, 99 `genmanip` modules):
 
 ## Runtime fixes
 
-(filled by Tasks 5–6)
+Baseline: `configs/tasks/minimal.yml` (Franka panda_hand, `force_fixed_grasp`), 2 episodes, headless, Isaac Sim 6.0.1 / PhysX, cuRobo 0.7.8, warp 1.13.0.
+
+Environment (not in git): `roboticstoolbox-python` 1.1.1 is source-incompatible with numpy 2 (`numpy.disp`); installed **1.4.2** (imported by `render_recorder.py`; numpy 2.3.1 / torch 2.11.0+cu128 unchanged). `genmanip/utils/standalone/io_utils.py` needs `libturbojpeg` — evaluator-only (`core/evaluator/env.py`), not on the demogen/render path; needs `sudo apt install libturbojpeg0`. Import walk FAILED list: `core.evaluator.env`, `utils.standalone.io_utils` (turbojpeg), `utils.standalone.gpt_utils` (OPENAI_API_KEY).
+
+1. `genmanip/utils/planner/curobo/base.py:10` → alias `wp.torch = warp._src.torch` when missing. warp ≥ 1.13 removed the `warp.torch` submodule; cuRobo 0.7.8 `geom/sdf/world_mesh.py:67` still calls `wp.torch.device_from_torch` (`AttributeError: module 'warp' has no attribute 'torch'`).
+2. `genmanip/utils/loader/utils.py` (new `ensure_physics_views(world)`), called at `core/scene/scene.py:post_initialize` and `utils/loader/domain_randomization.py:reset_scene` → `flush_changes()`, then `world.reset()` if `SimulationManager.get_physics_sim_view().is_valid` is False. In Isaac 6, `prim.SetActive(False)` on the preloaded objects invalidates the PhysX tensor simulation view (`prim ... was deleted while being used by a tensor view class`), the cached `Articulation._physics_view` is never rebuilt (`world.initialize_physics()` is a no-op unless `_warmup_needed`, and `initialize_physics()` alone does not reach the prims), so `robot.get_world_pose()` raised `Failed to get root link transforms from backend`. `world.reset()` (stop → play → `Scene._finalize` → `initialize`) is the sanctioned rebuild. Ceiling: it also resets registered prims to default state; callers re-apply joint positions.
+3. `genmanip/utils/loader/scene.py:create_camera_list` → set `/app/runLoops/main/rateLimitFrequency = round(1/rendering_dt)` before constructing `Camera`s. Isaac 6 `World` only sets it when rate limiting is enabled, but `Camera.set_frequency` still validates `rateLimitFrequency % frequency == 0`; render.py's `rendering_dt = 1/600000` failed (`frequency of the camera sensor needs to be a divisor of the rendering frequency`); demogen's 30 Hz passed by luck.
+4. `genmanip/core/robot/base.py:13`, `genmanip/utils/loader/scene.py:16` → `MplibPlanner = ()` instead of `None`. The mplib import guard from `33a6096` made `isinstance(self.planner, MplibPlanner)` raise `TypeError` for every episode (19 recorded failures before the fix).
+
+Results: demogen 2/2 episodes successful in one run (~55 s wall incl. ~10 s Kit boot, 306/307 steps each); render 2/2 episodes in ~111 s wall (~34 s per episode for 3 recorded cameras + overhead at 640x480). Render mode `RealTimePathTracing`. Deprecation seen: `torch.jit.script is deprecated` (cuRobo). Demogen/render return exit 0 even on an uncaught traceback (fastShutdown), so gate on `log.pkl`/outputs, not the exit code.
 
 ## Adversarial review 2026-09-10 (gpt-6-astra) — verdicts after checking source
 

@@ -7,6 +7,13 @@ Licensed under the MIT License.
 
 import os
 
+import warp as wp
+
+if not hasattr(wp, "torch"):  # warp>=1.13 removed the wp.torch submodule; cuRobo 0.7.8 still uses it
+    import warp._src.torch as _wp_torch
+
+    wp.torch = _wp_torch
+
 from curobo.geom.sdf.world import CollisionCheckerType
 from curobo.geom.types import WorldConfig
 from curobo.types.base import TensorDeviceType
