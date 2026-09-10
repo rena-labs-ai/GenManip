@@ -230,3 +230,13 @@ Import walk 2026-09-10 (Isaac Sim 6.0.1, 99 `genmanip` modules):
 ## Runtime fixes
 
 (filled by Tasks 5–6)
+
+## Adversarial review 2026-09-10 (gpt-6-astra) — verdicts after checking source
+
+1. Confirmed: `pkgutil.walk_packages` yields 0 modules (namespace packages). Fixed in `check_imports_isaac6.py` (glob-based, asserts count).
+2. Confirmed: stock banana task requires the private AnyGrasp server (`configs/miscs/anygrasp.yml` → 10.150.123.24, POST without timeout). **Baseline switched to `configs/tasks/minimal.yml`** (`force_fixed_grasp: true` → local top-down grasp in `get_init_grasp`). Explicit baseline change.
+3. Confirmed: success is counted in `trajectory/log.pkl` (`record_log`), no `log.txt`. Gate = `log.pkl["success"]` increases and new episode dirs appear.
+4. Confirmed: `download_assets.py --dataset` is required (done: basic, banana, banana-layout, franka-robotiq); `saved/configs/` must be created.
+5. Confirmed: demogen skips a task whose `log.pkl` already has ≥ num_episode successes; render skips existing episode dirs. Smoke run uses a unique `task_name` and `set -o pipefail`.
+6. Confirmed: `check_data_valid.py` prints but exits 0; validates keys not RGB. Task 6 decodes RGB for every camera in the camera config and compares frame counts.
+7. Confirmed: `genmanip/utils/planner/mplib/utils.py` also needed guarding. Done in `33a6096`.
