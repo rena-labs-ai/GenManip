@@ -81,6 +81,8 @@ Check out our tutorials for a step-by-step learning path — from basics to adva
 
 👉 Full tutorials available at **[genmanip.com](https://genmanip.com)**
 
+**Isaac Sim 6.0 (this fork):** `bash scripts/install_isaac6.sh` builds a Python 3.12 venv with Isaac Sim 6.0.1 (pip), torch 2.11 cu128 and cuRobo v0.7.8 for Blackwell GPUs, then run `demogen.py` / `render.py` with `OMNI_KIT_ACCEPT_EULA=YES`. Details and the 4.x → 6.0 rename map: `plans/2026-09-10-isaac-6-port-design.md`. Baseline: `configs/tasks/minimal.yml` (no AnyGrasp server needed).
+
 For questions or collaborations, feel free to open an Issue or contact:
 📧 **[gaoning@pjlab.org.cn](mailto:gaoning@pjlab.org.cn)**
 
