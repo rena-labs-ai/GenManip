@@ -273,7 +273,8 @@ class RenderWorkflow:
         if self.args.downsample > 1:
             data_list = data_list[:: self.args.downsample]
 
-        has_joint_world_pose = "joint_world_pose" in data_list[0]
+        # empty when the robot's joints are not under its articulation root (rena): replay qpos in step mode
+        has_joint_world_pose = bool(data_list[0].get("joint_world_pose"))
         joint_xform_list = None
         if has_joint_world_pose:
             joint_xform_list = create_joint_xform_list(scene.robot_list[0].robot)
